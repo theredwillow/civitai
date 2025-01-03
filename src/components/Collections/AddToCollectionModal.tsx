@@ -183,6 +183,10 @@ function CollectionListForm({
     );
   };
 
+  const enterMultiSelectMode = () => {
+    console.log('enterMultiSelectMode');
+  };
+
   useEffect(() => {
     if (collectionItems.length === 0) return;
 
@@ -398,6 +402,9 @@ function CollectionListForm({
         </Stack>
 
         <Group position="right">
+          <Button variant="subtle" onClick={enterMultiSelectMode}>
+            Enter multi-select mode
+          </Button>
           <Button loading={addCollectionItemMutation.isLoading} onClick={handleSubmit}>
             Save
           </Button>
