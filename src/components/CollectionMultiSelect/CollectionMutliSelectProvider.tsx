@@ -1,6 +1,8 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Button } from '@mantine/core';
 
 type CollectionMultiSelectState = {
+  MultiSelectButton: React.FC;
   MultiSelectDropdown: React.FC;
   selectedMode: boolean;
   setSelectedMode: (mode: boolean) => void;
@@ -25,6 +27,12 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
 
   const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setSelectedCollection(event.target.value);
+
+  const MultiSelectButton: React.FC = () => (
+    <Button onClick={() => setSelectedMode(!selectedMode)}>
+      {!selectedMode ? 'Enter' : 'Exit'} Multi Select Mode
+    </Button>
+  );
 
   const MultiSelectDropdown: React.FC = () => {
     if (!selectedMode) return null;
@@ -51,6 +59,7 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
   return (
     <CollectionMultiSelectContext.Provider
       value={{
+        MultiSelectButton,
         MultiSelectDropdown,
         selectedMode,
         setSelectedMode,

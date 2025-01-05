@@ -95,7 +95,7 @@ function CollectionListForm({
   const { classes } = useCollectionListStyles();
   const queryUtils = trpc.useUtils();
   const [selectedCollections, setSelectedCollections] = useState<SelectedCollection[]>([]);
-  const { setSelectedMode } = useCollectionMultiSelectContext();
+  const { MultiSelectButton } = useCollectionMultiSelectContext();
 
   const { data: collections = [], isLoading: loadingCollections } =
     trpc.collection.getAllUser.useQuery({
@@ -183,12 +183,6 @@ function CollectionListForm({
         },
       }
     );
-  };
-
-  const enterMultiSelectMode = () => {
-    console.log('enterMultiSelectMode');
-
-    setSelectedMode(true);
   };
 
   useEffect(() => {
@@ -406,9 +400,7 @@ function CollectionListForm({
         </Stack>
 
         <Group position="right">
-          <Button variant="subtle" onClick={enterMultiSelectMode}>
-            Enter multi-select mode
-          </Button>
+          <MultiSelectButton />
           <Button loading={addCollectionItemMutation.isLoading} onClick={handleSubmit}>
             Save
           </Button>
