@@ -10,6 +10,7 @@ import { IconArrowUp } from '@tabler/icons-react';
 import { AssistantButton } from '~/components/Assistant/AssistantButton';
 import { ChatPortal } from '~/components/Chat/ChatProvider';
 import { FeatureAccess } from '~/server/services/feature-flags.service';
+import { useCollectionMultiSelectContext } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 
 const footerLinks: (React.ComponentProps<typeof Button<typeof Link>> & {
   features?: (features: FeatureAccess) => boolean;
@@ -74,6 +75,8 @@ export function AppFooter() {
     },
   });
 
+  const { MultiSelectDropdown } = useCollectionMultiSelectContext();
+
   return (
     <footer
       ref={footerRef}
@@ -91,6 +94,7 @@ export function AppFooter() {
           >
             <IconArrowUp size={20} stroke={2.5} />
           </Button>
+          <MultiSelectDropdown />
           <AssistantButton />
         </div>
       </div>

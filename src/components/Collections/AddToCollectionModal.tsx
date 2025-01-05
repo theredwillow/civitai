@@ -43,6 +43,7 @@ import { getDisplayName } from '~/utils/string-helpers';
 import { useCurrentUser } from '~/hooks/useCurrentUser';
 import { isDefined } from '~/utils/type-guards';
 import { closeAllModals, openModal } from '@mantine/modals';
+import { useCollectionMultiSelectContext } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 
 type Props = Partial<AddCollectionItemInput> & { createNew?: boolean };
 
@@ -94,6 +95,7 @@ function CollectionListForm({
   const { classes } = useCollectionListStyles();
   const queryUtils = trpc.useUtils();
   const [selectedCollections, setSelectedCollections] = useState<SelectedCollection[]>([]);
+  const { setSelectedMode } = useCollectionMultiSelectContext();
 
   const { data: collections = [], isLoading: loadingCollections } =
     trpc.collection.getAllUser.useQuery({
@@ -185,6 +187,8 @@ function CollectionListForm({
 
   const enterMultiSelectMode = () => {
     console.log('enterMultiSelectMode');
+
+    setSelectedMode(true);
   };
 
   useEffect(() => {

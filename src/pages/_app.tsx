@@ -55,6 +55,7 @@ import { PaddleProvider } from '~/providers/PaddleProvider';
 // import { PaypalProvider } from '~/providers/PaypalProvider';
 // import { StripeSetupSuccessProvider } from '~/providers/StripeProvider';
 import { ThemeProvider } from '~/providers/ThemeProvider';
+import { CollectionMultiSelectProvider } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 import type { FeatureAccess } from '~/server/services/feature-flags.service';
 import { getFeatureFlags } from '~/server/services/feature-flags.service';
 import { parseCookies, ParsedCookies } from '~/shared/utils';
@@ -159,12 +160,14 @@ function MyApp(props: CustomAppProps) {
                                                 <BaseLayout>
                                                   {isProd && <TrackPageView />}
                                                   <ChatContextProvider>
-                                                    <CustomModalsProvider>
-                                                      {getLayout(<Component {...pageProps} />)}
-                                                      {/* <StripeSetupSuccessProvider /> */}
-                                                      <DialogProvider />
-                                                      <RoutedDialogProvider />
-                                                    </CustomModalsProvider>
+                                                    <CollectionMultiSelectProvider>
+                                                      <CustomModalsProvider>
+                                                        {getLayout(<Component {...pageProps} />)}
+                                                        {/* <StripeSetupSuccessProvider /> */}
+                                                        <DialogProvider />
+                                                        <RoutedDialogProvider />
+                                                      </CustomModalsProvider>
+                                                    </CollectionMultiSelectProvider>
                                                   </ChatContextProvider>
                                                 </BaseLayout>
                                               </IntersectionObserverProvider>
