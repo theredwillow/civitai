@@ -114,7 +114,7 @@ export function PostImages({
                       )}
                     </Group>
                     <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
-                      <MultiSelectCheckbox />
+                      <MultiSelectCheckbox imageId={image.id} />
                       <ImageContextMenu image={image} />
                       {features.imageGeneration && image.hasMeta && (
                         <HoverActionButton

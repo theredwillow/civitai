@@ -1,10 +1,12 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Button, Checkbox } from '@mantine/core';
+import { Button, Checkbox, Center, Loader } from '@mantine/core';
+import { trpc } from '~/utils/trpc';
+import { CollectionContributorPermission, CollectionType } from '~/shared/utils/prisma/enums';
 
 type CollectionMultiSelectState = {
   MultiSelectButton: React.FC;
   MultiSelectDropdown: React.FC;
-  MultiSelectCheckbox: React.FC;
+  MultiSelectCheckbox: React.FC<{ imageId: number }>;
   selectedMode: boolean;
   setSelectedMode: (mode: boolean) => void;
   selectedCollection: string;
@@ -20,17 +22,34 @@ export const useCollectionMultiSelectContext = () => {
   return context;
 };
 
+export const getCollectionsItemIsIn = (imageId: number) => {
+  // FIXME Create a loading state for the checkbox
+  const { data: collectionItems = [], isLoading: loadingStatus } =
+    trpc.collection.getUserCollectionItemsByItem.useQuery({
+      imageId,
+      type: CollectionType.Image,
+    });
+  return collectionItems.map((item) => item.collectionId);
+};
+
 export const CollectionMultiSelectProvider = ({ children }: { children: ReactNode }) => {
   const [selectedMode, setSelectedMode] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState<string>('');
 
-  // TODO Get collections from backend using trpc like AddToCollectionModal does
-  const options = ['Collection 1', 'Collection 2', 'Collection 3'];
+  const { data: collections = [], isLoading: loadingCollections } =
+    trpc.collection.getAllUser.useQuery({
+      permissions: [
+        CollectionContributorPermission.ADD,
+        CollectionContributorPermission.ADD_REVIEW,
+        CollectionContributorPermission.MANAGE,
+      ],
+      type: CollectionType.Image,
+    });
 
   const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setSelectedCollection(event.target.value);
 
-  // TODO Create toggling architecture for images vs posts
+  // TODO Using CollectionType, create toggling architecture for images vs posts
   const MultiSelectButton: React.FC = () => (
     <Button onClick={() => setSelectedMode(!selectedMode)} color={!selectedMode ? 'green' : 'red'}>
       {!selectedMode ? 'Enter' : 'Exit'} Multi Select Mode
@@ -40,31 +59,55 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
   const MultiSelectDropdown: React.FC = () => {
     if (!selectedMode) return null;
 
+    if (loadingCollections) {
+      return (
+        <Center p="sm">
+          <Loader />
+        </Center>
+      );
+    }
+
     // TODO Fix styling of dropdown
     return (
-      <div style={{ height: '36px', backgroundColor: 'blue' }}>
-        <select
-          value={selectedCollection}
-          onChange={handleSelectionChange}
-          style={{ width: '100%', padding: '5px' }}
-        >
-          <option value="">Select a collection</option>
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        {/* TODO Fix styling of close button */}
-        <button onClick={() => setSelectedMode(false)}>X</button>
+      <div style={{ height: '36px', width: '200px', backgroundColor: 'blue' }}>
+        <Center>
+          <select
+            value={selectedCollection}
+            onChange={handleSelectionChange}
+            style={{ padding: '10px' }}
+          >
+            <option value="">Select a collection</option>
+            {collections.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          {/* TODO Fix styling of close button */}
+          <button onClick={() => setSelectedMode(false)}>X</button>
+        </Center>
       </div>
     );
   };
 
   // TODO Get checked status from backend, useEffect on selectedCollection change
-  const MultiSelectCheckbox: React.FC = () => {
-    if (selectedMode) return <Checkbox size="xl" />;
-    return null;
+  const MultiSelectCheckbox: React.FC<{ imageId: number }> = ({ imageId }) => {
+    if (!selectedMode || !selectedCollection) {
+      return null;
+    }
+
+    const collectionsItemIsIn = getCollectionsItemIsIn(imageId);
+    const isChecked = collectionsItemIsIn.includes(Number(selectedCollection));
+
+    const handleCheckboxChange = () => {
+      if (isChecked) {
+        // TODO Remove from collection
+      } else {
+        // TODO Add to collection
+      }
+    };
+
+    return <Checkbox size="xl" checked={isChecked} onChange={handleCheckboxChange} />;
   };
 
   return (
