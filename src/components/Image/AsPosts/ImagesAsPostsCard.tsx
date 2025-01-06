@@ -53,6 +53,7 @@ import { generationPanel } from '~/store/generation.store';
 import { showSuccessNotification } from '~/utils/notifications';
 import { trpc } from '~/utils/trpc';
 import { isDefined } from '~/utils/type-guards';
+import { useCollectionMultiSelectContext } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 
 export function ImagesAsPostsCard({
   data,
@@ -89,6 +90,8 @@ export function ImagesAsPostsCard({
   const [slidesInView, setSlidesInView] = useState<number[]>([]);
 
   const { gallerySettings, toggle } = useGallerySettings({ modelId: model.id });
+
+  const { MultiSelectCheckbox } = useCollectionMultiSelectContext();
 
   const handleUpdateGallerySettings = async ({
     imageId,
@@ -348,6 +351,7 @@ export function ImagesAsPostsCard({
                         <ImageGuard2.BlurToggle className="absolute left-2 top-2 z-10" />
                         {safe && (
                           <Stack spacing="xs" className="absolute right-2 top-2 z-10">
+                            <MultiSelectCheckbox />
                             <ImageContextMenu
                               image={image}
                               additionalMenuItems={moderationOptions(image)}

@@ -1,9 +1,10 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Button } from '@mantine/core';
+import { Button, Checkbox } from '@mantine/core';
 
 type CollectionMultiSelectState = {
   MultiSelectButton: React.FC;
   MultiSelectDropdown: React.FC;
+  MultiSelectCheckbox: React.FC;
   selectedMode: boolean;
   setSelectedMode: (mode: boolean) => void;
   selectedCollection: string;
@@ -29,7 +30,7 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
     setSelectedCollection(event.target.value);
 
   const MultiSelectButton: React.FC = () => (
-    <Button onClick={() => setSelectedMode(!selectedMode)}>
+    <Button onClick={() => setSelectedMode(!selectedMode)} color={!selectedMode ? 'green' : 'red'}>
       {!selectedMode ? 'Enter' : 'Exit'} Multi Select Mode
     </Button>
   );
@@ -56,11 +57,17 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
     );
   };
 
+  const MultiSelectCheckbox: React.FC = () => {
+    if (selectedMode) return <Checkbox size="xl" />;
+    return null;
+  };
+
   return (
     <CollectionMultiSelectContext.Provider
       value={{
         MultiSelectButton,
         MultiSelectDropdown,
+        MultiSelectCheckbox,
         selectedMode,
         setSelectedMode,
         selectedCollection,

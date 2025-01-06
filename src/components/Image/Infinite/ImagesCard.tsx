@@ -35,6 +35,7 @@ import { getIsPublicBrowsingLevel } from '~/shared/constants/browsingLevel.const
 import { generationPanel } from '~/store/generation.store';
 import { useImageStore } from '~/store/image.store';
 import { DurationBadge } from '~/components/DurationBadge/DurationBadge';
+import { useCollectionMultiSelectContext } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 
 export function ImagesCard({ data, height }: { data: ImagesInfiniteModel; height: number }) {
   const { classes, cx } = useStyles();
@@ -75,6 +76,8 @@ export function ImagesCard({ data, height }: { data: ImagesInfiniteModel; height
   const twCardStyle = useMemo(() => {
     return !image.cosmetic?.data ? { height } : undefined;
   }, [image.cosmetic, height]);
+
+  const { MultiSelectCheckbox } = useCollectionMultiSelectContext();
 
   const reactionMetrics = useMemo(
     () => ({
@@ -148,6 +151,7 @@ export function ImagesCard({ data, height }: { data: ImagesInfiniteModel; height
                   </div>
                   {safe && (
                     <div className="absolute right-2 top-2 flex flex-col gap-2">
+                      <MultiSelectCheckbox />
                       {!isBlocked && <ImageContextMenu image={image} />}
                       {features.imageGeneration && image.hasMeta && (
                         <HoverActionButton

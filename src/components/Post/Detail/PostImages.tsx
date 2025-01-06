@@ -33,6 +33,7 @@ import HoverActionButton from '~/components/Cards/components/HoverActionButton';
 import { useFeatureFlags } from '~/providers/FeatureFlagsProvider';
 import { generationPanel } from '~/store/generation.store';
 import { AdUnitTop } from '~/components/Ads/AdUnit';
+import { useCollectionMultiSelectContext } from '~/components/CollectionMultiSelect/CollectionMutliSelectProvider';
 
 const maxWidth = MAX_POST_IMAGES_WIDTH;
 const maxInitialImages = 20;
@@ -68,6 +69,8 @@ export function PostImages({
 
   const remainingImages = images.length - maxInitialImages;
   const _images = showMore ? images : images.slice(0, maxInitialImages);
+
+  const { MultiSelectCheckbox } = useCollectionMultiSelectContext();
 
   return (
     <Stack>
@@ -111,6 +114,7 @@ export function PostImages({
                       )}
                     </Group>
                     <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
+                      <MultiSelectCheckbox />
                       <ImageContextMenu image={image} />
                       {features.imageGeneration && image.hasMeta && (
                         <HoverActionButton
