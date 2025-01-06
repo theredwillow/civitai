@@ -24,11 +24,13 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
   const [selectedMode, setSelectedMode] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState<string>('');
 
+  // TODO Get collections from backend using trpc like AddToCollectionModal does
   const options = ['Collection 1', 'Collection 2', 'Collection 3'];
 
   const handleSelectionChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setSelectedCollection(event.target.value);
 
+  // TODO Create toggling architecture for images vs posts
   const MultiSelectButton: React.FC = () => (
     <Button onClick={() => setSelectedMode(!selectedMode)} color={!selectedMode ? 'green' : 'red'}>
       {!selectedMode ? 'Enter' : 'Exit'} Multi Select Mode
@@ -38,6 +40,7 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
   const MultiSelectDropdown: React.FC = () => {
     if (!selectedMode) return null;
 
+    // TODO Fix styling of dropdown
     return (
       <div style={{ height: '36px', backgroundColor: 'blue' }}>
         <select
@@ -52,11 +55,13 @@ export const CollectionMultiSelectProvider = ({ children }: { children: ReactNod
             </option>
           ))}
         </select>
+        {/* TODO Fix styling of close button */}
         <button onClick={() => setSelectedMode(false)}>X</button>
       </div>
     );
   };
 
+  // TODO Get checked status from backend, useEffect on selectedCollection change
   const MultiSelectCheckbox: React.FC = () => {
     if (selectedMode) return <Checkbox size="xl" />;
     return null;

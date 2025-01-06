@@ -400,6 +400,8 @@ function CollectionListForm({
         </Stack>
 
         <Group position="right">
+          {/* TODO Provide currently selected collection(s) to MultiSelectButton */}
+          {/* TODO Close Modal when MultiSelectButton enters multi select mode */}
           <MultiSelectButton />
           <Button loading={addCollectionItemMutation.isLoading} onClick={handleSubmit}>
             Save
